@@ -1,0 +1,41 @@
+[project]
+name = "mabs"
+version = "0.1.0"
+authors = [
+  { name="Xiqiang Liu" }
+]
+description = "A framework for multi-armed bandit agents and environments."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.9.12"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+]
+dependencies = [
+    "numpy",
+    "pandas>=1.5",
+    "tqdm",
+    "matplotlib",
+    "seaborn"
+]
+
+[project.optional-dependencies]
+notebook = [ "notebook>=1.0.0" ]
+dev = [ "black", "isort" ]
+jit = [ "numba" ]
+
+[project.urls]
+"Homepage" = "https://github.com/xiqiangliu/mabs"
+"Bug Tracker" = "https://github.com/xiqiangliu/mabs/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.isort]
+profile = "black"

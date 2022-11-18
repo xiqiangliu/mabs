@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from ..arms.base import BaseArm
+from ..arms import BaseArm
 from .record import BanditRecord
 
 

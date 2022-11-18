@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Union
 
-from ..arms.base import BaseArm
+from ..arms import BaseArm
 
 
 class BanditRecord:

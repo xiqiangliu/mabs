@@ -17,8 +17,8 @@ class LinearArm(BaseArm):
         """
         super().__init__(**kwargs)
 
-        self._theta = np.array(theta)
-        self._context = np.array(context)
+        self._theta = np.atleast_1d(theta)
+        self._context = np.atleast_1d(context)
 
         if self._theta.shape != self._context.shape:
             raise ValueError(
@@ -31,10 +31,7 @@ class LinearArm(BaseArm):
         return self.deterministic_reward + self._rng.standard_normal()
 
     def _compute_reward(self):
-        if np.ndim(self._theta) == np.ndim(self._context) == 0:
-            self.deterministic_reward = self._theta * self._context
-        else:
-            self.deterministic_reward = self._theta @ self._context
+        self.deterministic_reward = self._theta @ self._context
 
     @property
     def theta(self):

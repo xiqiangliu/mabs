@@ -1,24 +1,22 @@
 [project]
 name = "mabs"
 version = "0.1.0"
-authors = [
-  { name="Xiqiang Liu" }
-]
+authors = [ { name="Xiqiang Liu" } ]
 description = "A framework for multi-armed bandit agents and environments."
 readme = "README.md"
 license = { file="LICENSE" }
-requires-python = ">=3.9.12"
+requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Science/Research",
 ]
 dependencies = [
-    "numpy",
-    "pandas>=1.5",
-    "tqdm",
-    "matplotlib",
-    "seaborn"
+    "numpy>=1.20",
+    "pandas>=1.5.0",
+    "tqdm>=4.64.0",
+    "matplotlib>=3.5.0",
+    "seaborn>=0.11.0"
 ]
 
 [project.optional-dependencies]

@@ -1,10 +1,10 @@
 import numpy as np
 
 from ...arms.contextual import LinearArm
-from ..base import BaseEnv
+from .base import ContextualEnv
 
 
-class LinearUCB(BaseEnv):
+class LinearUCB(ContextualEnv):
     """
     UCB for stochastic linear bandits.
     """
@@ -51,12 +51,3 @@ class LinearUCB(BaseEnv):
         self.t += 1
 
         return selected_context.squeeze(), reward
-
-    @property
-    def regret(self):
-        optimal_rewards = max([arm.deterministic_reward for arm in self.arms]) * self.t
-        actual_rewards = sum(
-            [self.log[arm]["actions"] * arm.deterministic_reward for arm in self.arms]
-        )
-
-        return optimal_rewards - actual_rewards

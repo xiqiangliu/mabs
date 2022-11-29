@@ -29,5 +29,5 @@ class UCB(SimpleEnv):
     @property
     def ucb_value(self):
         return np.array(self.log.empirical_mu) + (
-            2 * np.log(1 / self.delta) / len(self.arms)
+            2 * np.log(1 / self.delta) / (self.t + 1)
         ) ** (1 / 2)

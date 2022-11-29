@@ -17,7 +17,7 @@ class BaseArm(ABC):
         self._rng = np.random.default_rng(seed=seed)
 
     @abstractmethod
-    def pull(self):
+    def pull(self) -> float:
         """
         Pull the arm one time.
 

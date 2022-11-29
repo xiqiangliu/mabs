@@ -18,3 +18,6 @@ class DeterministicArm(BaseArm):
 
     def pull(self):
         return self.reward
+
+    def mean_reward(self) -> float:
+        return self.reward

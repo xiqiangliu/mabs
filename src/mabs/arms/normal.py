@@ -16,3 +16,7 @@ class NormalArm(BaseArm):
 
     def pull(self):
         return self._rng.normal(loc=self.mu, scale=self.sigma)
+
+    @property
+    def mean_reward(self):
+        return self.mu

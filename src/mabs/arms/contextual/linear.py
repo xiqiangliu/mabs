@@ -30,6 +30,10 @@ class LinearArm(BaseArm):
     def pull(self):
         return self.deterministic_reward + self._rng.standard_normal()
 
+    @property
+    def mean_reward(self) -> float:
+        return self.deterministic_reward
+
     def _compute_reward(self):
         self.deterministic_reward = self._theta @ self._context
 

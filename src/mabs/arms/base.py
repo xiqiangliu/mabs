@@ -25,3 +25,9 @@ class BaseArm(ABC):
             Reward of the arm as a result of this pull.
         """
         pass
+
+    @property
+    @abstractmethod
+    def mean_reward(self) -> float:
+        """Expected reward of the arm"""
+        pass

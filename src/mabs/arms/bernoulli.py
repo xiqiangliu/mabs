@@ -22,3 +22,7 @@ class BernoulliArm(BaseArm):
 
     def pull(self):
         return self._rng.binomial(n=1, p=self.p)
+
+    @property
+    def mean_reward(self) -> float:
+        return self.p

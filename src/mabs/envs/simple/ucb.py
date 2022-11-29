@@ -5,7 +5,7 @@ from .base import SimpleEnv
 
 class UCB(SimpleEnv):
     """
-    Environment with Thompson Sampling Policy. Currently supports arms with normal and bernoulli distributions.
+    Environment with UCB-Delta policy.
     """
 
     def __init__(self, n: int, **kwargs):

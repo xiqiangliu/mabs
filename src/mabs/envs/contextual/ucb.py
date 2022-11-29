@@ -22,7 +22,6 @@ class LinearUCB(ContextualEnv):
         self.V = self.lamb * np.eye(self.d)
         self.theta = np.zeros(self.d)
         self.empirical_mean = np.zeros_like(self.theta)
-        self.t = 0
 
         self.arms = arms
         self.contexts = np.array([arm.context for arm in self.arms])

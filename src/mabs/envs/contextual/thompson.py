@@ -17,10 +17,10 @@ class LinearThompson(ContextualEnv):
     ):
         super().__init__(**kwargs)
 
-        mu = np.array(mu)
-        sigma = np.array(sigma)
-
+        mu = np.atleast_1d(mu)
+        sigma = np.atleast_2d(sigma)
         assert mu.ndim <= 1 and sigma.ndim <= mu.ndim + 1
+
         if mu.size != sigma.shape[0]:
             raise ValueError(
                 f"The mean and convariance's dimension for Thompson Sampling must match. Mean has shape {mu.shape} while covariance matrix has shape {sigma.shape}"
@@ -42,12 +42,16 @@ class LinearThompson(ContextualEnv):
         reward = selected_arm.pull()
         self.log.record(arm=selected_arm, reward=reward)
 
-        self.mu = np.linalg.inv(
-            np.linalg.inv(self.sigma) + selected_context @ selected_context.T
-        ) @ (np.linalg.inv(self.sigma) @ sampled_theta + reward * selected_context)
+        self.mu = (
+            np.linalg.inv(
+                np.linalg.inv(self.sigma) + selected_context @ selected_context.T
+            )
+            @ (np.linalg.inv(self.sigma) @ sampled_theta + reward * selected_context)
+        ).ravel()
 
         self.sigma = np.linalg.inv(
             np.linalg.inv(self.sigma) + selected_context @ selected_context.T
         )
 
+        self.t += 1
         return selected_context.squeeze(), reward

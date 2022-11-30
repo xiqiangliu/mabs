@@ -1,5 +1,7 @@
 import numpy as np
 
+from ...arms import BaseArm
+from ...envs.record import BanditRecord
 from .base import SimpleEnv
 
 
@@ -17,17 +19,43 @@ class UCB(SimpleEnv):
         super().__init__(**kwargs)
         self.n = n
         self.delta = 1 / self.n**2
+        self._finish_init = False
 
     def act(self):
-        arm = self.arms[self.ucb_value.argmax()]
-        reward = arm.pull()
-        self.log.record(arm=arm, reward=reward)
+        if not self._finish_init:
+            for arm in self.arms:
+                if self.log[arm]["actions"] == 0:
+                    selected_arm = arm
+                    break
+            else:
+                selected_arm = self.arms[self.ucb_value.argmax()]
+                self._finish_init = True
+        else:
+            selected_arm = self.arms[self.ucb_value.argmax()]
+        reward = selected_arm.pull()
+        self.log.record(arm=selected_arm, reward=reward)
         self.t += 1
 
         return reward
 
     @property
+    def arms(self) -> list[BaseArm]:
+        return self._arms
+
+    @arms.setter
+    def arms(self, arms: list[BaseArm]):
+        self._arms = arms
+
+        # Trick to initialize logger
+        self.log = BanditRecord()
+        for arm in self._arms:
+            self.log.actions[arm]
+
+        self._finish_init = False
+
+    @property
     def ucb_value(self):
-        return np.array(self.log.empirical_mu) + (
-            2 * np.log(1 / self.delta) / (self.t + 1)
-        ) ** (1 / 2)
+        action_counts = np.array([self.log[arm]["actions"] for arm in self.arms])
+        return np.array(self.log.empirical_mu) + np.sqrt(
+            2 * np.log(1 / self.delta) / action_counts
+        )

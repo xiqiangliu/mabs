@@ -23,7 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 notebook = [ "notebook>=1.0.0" ]
 dev = [ "black", "isort" ]
-jit = [ "numba" ]
+jit = [ "numba>=0.53.0" ]
 
 [project.urls]
 "Homepage" = "https://github.com/xiqiangliu/mabs"

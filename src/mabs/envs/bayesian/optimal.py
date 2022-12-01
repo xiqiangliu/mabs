@@ -64,9 +64,3 @@ class BayesianOneArmBernoulli(BaseEnv):
             self.s += 1
         self.log.record(arm=optimal_arm, reward=reward)
         return reward
-
-    @property
-    def regret(self) -> float:
-        optimal_reward = max([arm.p for arm in self.arms]) * self.n
-        actual_reward = sum([self.log[arm]["actions"] * arm.p for arm in self.arms])
-        return optimal_reward - actual_reward

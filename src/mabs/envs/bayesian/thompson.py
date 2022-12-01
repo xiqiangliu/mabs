@@ -54,7 +54,10 @@ class ThompsonSampling(BaseEnv):
         )
         optimal_arm = self.arms[samples.argmax()]
         reward = optimal_arm.pull()
+
         self.log.record(arm=optimal_arm, reward=reward)
+        self.t += 1
+
         return reward
 
     @property

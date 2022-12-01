@@ -19,6 +19,7 @@ class BaseEnv(ABC):
         self._log = None
         self._rng = np.random.default_rng(seed=seed)
         self._arms = None
+        self.t = 0
 
     @property
     def arms(self) -> list[BaseArm]:
@@ -56,9 +57,13 @@ class BaseEnv(ABC):
         pass
 
     @property
-    @abstractmethod
     def regret(self) -> float:
         """
         Compute the regret at the moment.
         """
-        pass
+        optimal_rewards = max([arm.mean_reward for arm in self.arms]) * self.t
+        actual_rewards = sum(
+            [self.log[arm]["actions"] * arm.mean_reward for arm in self.arms]
+        )
+
+        return optimal_rewards - actual_rewards

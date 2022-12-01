@@ -41,10 +41,7 @@ class BayesianOneArmBernoulli(BaseEnv):
         self.alpha = alpha
         self.beta = beta
         self.n = n
-
-        self.t = 0
         self.s = 0
-
         self.omega = None
 
     def compute_policy(self) -> np.ndarray:

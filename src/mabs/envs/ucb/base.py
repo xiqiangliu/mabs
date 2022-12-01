@@ -5,26 +5,7 @@ from ..base import BaseEnv
 from ..record import BanditRecord
 
 
-class BaseUCBEnv(BaseEnv):
-    """
-    Base environment for UCB policy variants.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.t = 0
-
-    @property
-    def regret(self):
-        optimal_rewards = max([arm.mean_reward for arm in self.arms]) * self.t
-        actual_rewards = sum(
-            [self.log[arm]["actions"] * arm.mean_reward for arm in self.arms]
-        )
-
-        return optimal_rewards - actual_rewards
-
-
-class UCB(BaseUCBEnv):
+class UCB(BaseEnv):
     """
     Environment with UCB-Delta policy.
     """

@@ -58,25 +58,6 @@ class ThompsonSampling(BaseEnv):
         return reward
 
     @property
-    def regret(self):
-        if self.reward_dist == "bernoulli":
-            optimal_reward = (
-                np.max([arm.p for arm in self.arms]) * self.log.total_rounds
-            )
-            policy_reward = sum([arm.p * self.log[arm]["actions"] for arm in self.arms])
-            return optimal_reward - policy_reward
-        elif self.reward_dist == "normal":
-            optimal_reward = (
-                np.max([arm.mu for arm in self.arms]) * self.log.total_rounds
-            )
-            policy_reward = sum(
-                [arm.mu * self.log[arm]["actions"] for arm in self.arms]
-            )
-            return optimal_reward - policy_reward
-        else:
-            raise NotImplementedError
-
-    @property
     def prior_params(self):
         if not hasattr(self, "_prior_params"):
             raise ValueError("Prior parameters have not been set for each arm.")

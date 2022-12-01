@@ -1,4 +1,4 @@
 {
     "dockerhub-id": "xiqiangliu/dsc-capstone-docker:mabs",
-    "build-script": "pip install -e .; python run.py all"
+    "build-script": "python /home/jovyan/mabs/run.py all"
 }

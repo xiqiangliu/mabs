@@ -19,6 +19,7 @@ def plot_mean(
 
     sns.lineplot(data=mean_regret_df, x=x_axis, y="expected_regret", hue=group_name)
     plt.title("Expected Regret")
+    plt.legend(loc="lower right")
     plt.tight_layout()
 
     if save_path is not None:
@@ -38,6 +39,7 @@ def plot_var(
 
     sns.lineplot(data=var_regret_df, x=x_axis, y="regret_var", hue=group_name)
     plt.title("Regret Variance")
+    plt.legend(loc="lower right")
     plt.tight_layout()
 
     if save_path is not None:

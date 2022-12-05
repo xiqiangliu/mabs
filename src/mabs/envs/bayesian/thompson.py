@@ -36,7 +36,9 @@ class ThompsonSampling(BaseEnv):
                 (prior["mu"] / prior["sigma"] ** 2)
                 + arm_log["rewards"] / arm.sigma**2
             ) / (arm.sigma**-2 + prior["sigma"] ** -2)
-            sigma_prime = 1 / (prior["sigma"] ** -2 + arm.sigma**-2)
+            sigma_prime = (1 / (prior["sigma"] ** -2 + arm.sigma**-2)) ** 0.5
+            self.prior_params[arm]["mu"] = mu_prime
+            self.prior_params[arm]["sigma"] = sigma_prime
             return self._rng.normal(loc=mu_prime, scale=sigma_prime)
         elif self.reward_dist == "bernoulli":
             alpha_prime = prior["alpha"] + arm_log["rewards"]

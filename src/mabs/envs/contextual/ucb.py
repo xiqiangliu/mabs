@@ -9,8 +9,6 @@ class LinearUCB(ContextualEnv):
     UCB for stochastic linear bandits.
     """
 
-    arms = None
-
     def __init__(self, n: int, lamb: float, arms: list[LinearArm], **kwargs):
         super().__init__(**kwargs)
 

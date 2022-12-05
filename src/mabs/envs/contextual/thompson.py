@@ -10,8 +10,6 @@ class LinearThompson(ContextualEnv):
     Thompson Sampling for stochastic linear bandits.
     """
 
-    arms = None
-
     def __init__(
         self, mu: ArrayLike, sigma: ArrayLike, arms: list[LinearArm], **kwargs
     ):

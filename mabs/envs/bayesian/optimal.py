@@ -7,16 +7,7 @@ from ..base import BaseEnv
 
 logger = logging.getLogger(__name__)
 
-try:
-    from numba import njit
-except ImportError:
-    logger.info(
-        "Numba installation not found. Running Bayesian Optimal Policy without JIT."
-    )
-    njit = lambda func: func
 
-
-@njit
 def compute_policy(alpha: int, beta: int, n: int, p2: float) -> np.ndarray:
     def p(s, t):
         return (alpha + s) / (alpha + beta + t - 1)

@@ -2,8 +2,8 @@ import logging
 
 import numpy as np
 
-from ...arms import BernoulliArm, DeterministicArm
-from ..base import BaseEnv
+from ....arms import BernoulliArm, DeterministicArm
+from ...base import BaseEnv
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ def compute_policy(alpha: int, beta: int, n: int, p2: float) -> np.ndarray:
     return omega.argmax(axis=-1)
 
 
-class BayesianOneArmBernoulli(BaseEnv):
+class BayesianDensityOneArmBernoulli(BaseEnv):
     def __init__(self, alpha: int, beta: int, n: int, **kwargs):
         super().__init__(**kwargs)
 

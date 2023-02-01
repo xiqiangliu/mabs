@@ -4,7 +4,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from tqdm.contrib.concurrent import process_map
 
 import mabs
 
@@ -38,7 +37,9 @@ def launch_experiment(args):
 
 def experiment(save_path: Path):
     args = [(p, n) for p in ps]
-    result = process_map(launch_experiment, args)
+
+    with mp.Pool(mp.cpu_count()) as p:
+        result = p.starmap(experiment_optimal, args)
 
     save_path.parent.mkdir(exist_ok=True)
     with open(save_path, "wb") as f:

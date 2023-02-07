@@ -9,15 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 def compute_policy(n: int, p2: float) -> np.ndarray:
-    w = np.zeros((n + 1, n, n, 2))
+    w = np.zeros((n + 1, n + 1, n + 1, 2), dtype=np.float32)
     for t in np.arange(n - 1, -1, -1):
-        for s in np.arange(n - 1, 1, -1):
-            for q in np.arange(n - 1, 1, -1):
-                w[t - 1, s - 1, q - 1, 1] = p2 + w[t, s, q].max()
-                w[t - 1, s - 1, q - 1, 0] = (
-                    (s - 1) / (q - 1)
-                    + (s - 1) / (q - 1) * w[t, s, q].max()
-                    + (1 - (s - 1) / (q - 1)) * w[t, s - 1, q].max()
+        for s in np.arange(n):
+            for q in np.arange(n):
+                w[t, s, q, 1] = p2 + w[t + 1, s, q].max()
+                w[t, s, q, 0] = (
+                    (s + 1) / (q + 2)
+                    + (s + 1) / (q + 2) * w[t + 1, s + 1, q + 1].max()
+                    + (1 - (s + 1) / (q + 2)) * w[t + 1, s, q + 1].max()
                 )
 
     return w.argmax(axis=-1)

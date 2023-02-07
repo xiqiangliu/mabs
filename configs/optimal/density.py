@@ -21,7 +21,7 @@ def experiment_optimal(p, n, alpha, beta):
             mabs.arms.DeterministicArm(0.5),
         ]
 
-        env = mabs.envs.bayesian.BayesianOneArmBernoulli(alpha, beta, n)
+        env = mabs.envs.bayesian.BayesianDensityOneArmBernoulli(alpha, beta, n)
         env.arms = arms
         env.compute_policy()
 

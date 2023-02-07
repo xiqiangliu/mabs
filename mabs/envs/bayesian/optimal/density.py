@@ -13,8 +13,8 @@ def compute_policy(alpha: int, beta: int, n: int, p2: float) -> np.ndarray:
         return (alpha + s) / (alpha + beta + t - 1)
 
     omega = np.zeros((n + 1, n, 2))
-    for t in np.arange(n, -1, -1):
-        for s in np.arange(n, 0, -1):
+    for t in np.arange(n - 2, -1, -1):
+        for s in np.arange(n - 2, 0, -1):
             omega[t, s, 1] = (n - t + 1) * p2
             omega[t, s, 0] = (
                 p(s, t)

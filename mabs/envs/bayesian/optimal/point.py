@@ -2,25 +2,38 @@ import logging
 
 import numpy as np
 
+try:
+    from numba import njit, prange
+except ImportError:
+    prange = range
+
+    def njit(*args, **kwargs):
+        def decorator(func):
+            return func
+
+        return decorator
+
+
 from ....arms import BernoulliArm, DeterministicArm
 from ...base import BaseEnv
 
 logger = logging.getLogger(__name__)
 
 
+@njit(parallel=True)
 def compute_policy(n: int, p2: float) -> np.ndarray:
     w = np.zeros((n + 1, n + 1, n + 1, 2), dtype=np.float32)
-    for t in np.arange(n - 1, -1, -1):
-        for s in np.arange(n):
-            for q in np.arange(n):
+    for t_raw in prange(n):
+        for s in prange(n):
+            for q in prange(n):
+                t = n - 1 - t_raw
                 w[t, s, q, 1] = p2 + w[t + 1, s, q].max()
                 w[t, s, q, 0] = (
                     (s + 1) / (q + 2)
                     + (s + 1) / (q + 2) * w[t + 1, s + 1, q + 1].max()
                     + (1 - (s + 1) / (q + 2)) * w[t + 1, s, q + 1].max()
                 )
-
-    return w.argmax(axis=-1)
+    return w
 
 
 class BayesianPointOneArmBernoulli(BaseEnv):
@@ -36,7 +49,7 @@ class BayesianPointOneArmBernoulli(BaseEnv):
         assert isinstance(self.arms[0], BernoulliArm)
         assert isinstance(self.arms[1], DeterministicArm)
 
-        self.policy = compute_policy(self.n, self.arms[1].mean_reward)
+        self.policy = compute_policy(self.n, self.arms[1].mean_reward).argmax(axis=-1)
         return self.policy
 
     def act(self):

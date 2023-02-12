@@ -2,27 +2,41 @@ import logging
 
 import numpy as np
 
+try:
+    from numba import njit, prange
+except ImportError:
+    prange = range
+
+    def njit(*args, **kwargs):
+        def decorator(func):
+            return func
+
+        return decorator
+
+
 from ....arms import BernoulliArm, DeterministicArm
 from ...base import BaseEnv
 
 logger = logging.getLogger(__name__)
 
 
-def compute_policy(alpha: int, beta: int, n: int, p2: float) -> np.ndarray:
+@njit(parallel=True)
+def compute_policy(alpha: int, beta: int, n: int, p2: float):
     def p(s, t):
-        return (alpha + s) / (alpha + beta + t - 1)
+        return (alpha + s) / (alpha + beta + t)
 
-    omega = np.zeros((n + 1, n, 2))
-    for t in np.arange(n - 2, -1, -1):
-        for s in np.arange(n - 2, 0, -1):
-            omega[t, s, 1] = (n - t + 1) * p2
-            omega[t, s, 0] = (
+    w = np.zeros((n + 1, n + 1, 2), dtype=np.float32)
+    for t_raw in prange(n):
+        for s in prange(n):
+            t = n - 1 - t_raw
+            w[t, s, 1] = p2 + w[t + 1, s].max()
+            w[t, s, 0] = (
                 p(s, t)
-                + p(s, t) * omega[t + 1, s + 1].max()
-                + (1 - p(s, t)) * omega[t + 1, s].max()
+                + p(s, t) * w[t + 1, s + 1].max()
+                + (1 - p(s, t)) * w[t + 1, s].max()
             )
 
-    return omega.argmax(axis=-1)
+    return w
 
 
 class BayesianDensityOneArmBernoulli(BaseEnv):
@@ -42,7 +56,7 @@ class BayesianDensityOneArmBernoulli(BaseEnv):
 
         self.policy = compute_policy(
             self.alpha, self.beta, self.n, self.arms[1].mean_reward
-        )
+        ).argmax(axis=-1)
         return self.policy
 
     def act(self):

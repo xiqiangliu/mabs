@@ -22,16 +22,15 @@ logger = logging.getLogger(__name__)
 
 @njit(parallel=True)
 def compute_policy(n: int, p2: float) -> np.ndarray:
-    w = np.zeros((n + 1, n + 1, n + 1, 2), dtype=np.float32)
+    w = np.zeros((n + 1, n + 1, 2), dtype=np.float32)
     for t_raw in prange(n):
         for s in prange(n):
-            for q in prange(n):
                 t = n - 1 - t_raw
-                w[t, s, q, 1] = p2 + w[t + 1, s, q].max()
-                w[t, s, q, 0] = (
-                    (s + 1) / (q + 2)
-                    + (s + 1) / (q + 2) * w[t + 1, s + 1, q + 1].max()
-                    + (1 - (s + 1) / (q + 2)) * w[t + 1, s, q + 1].max()
+                w[t, s, 1] = p2 + w[t + 1, s].max()
+                w[t, s, 0] = (
+                    (s + 1) / (t + 2)
+                    + (s + 1) / (t + 2) * w[t + 1, s + 1].max()
+                    + (1 - (s + 1) / (t + 2)) * w[t + 1, s].max()
                 )
     return w
 
@@ -55,7 +54,7 @@ class BayesianPointOneArmBernoulli(BaseEnv):
     def act(self):
         if self.policy is None:
             raise RuntimeError("Must compute policy before acting.")
-        action = self.policy[self.t, self.s, self.q]
+        action = self.policy[self.t, self.s]
         self.t += 1
         optimal_arm = self.arms[action]
         reward = optimal_arm.pull()

@@ -11,7 +11,7 @@ import mabs
 mp.set_start_method("spawn", force=True)
 n = 1000
 sim_count = 1000
-ps = np.linspace(0, 1, 500)
+ps = np.arange(0, 1, 0.01)
 
 
 def experiment_optimal(p, n, rank):
